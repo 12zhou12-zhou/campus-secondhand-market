@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}校园闲置物品交易平台{% endblock %}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Microsoft YaHei", sans-serif; background: #f5f6f8; color: #222; }
+    header { background: #2c5f8a; color: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header a { color: #fff; text-decoration: none; margin-left: 16px; }
+    nav { background: #fff; padding: 10px 24px; border-bottom: 1px solid #e3e6ea; }
+    nav a { margin-right: 16px; color: #2c5f8a; text-decoration: none; }
+    main { max-width: 1000px; margin: 20px auto; padding: 0 16px; }
+    .card { background: #fff; border: 1px solid #e3e6ea; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .msg { padding: 10px 14px; border-radius: 6px; margin-bottom: 12px; }
+    .msg.success { background: #e6f4ea; color: #1e7d32; }
+    .msg.error { background: #fdecea; color: #c62828; }
+    .msg.info { background: #e8f0fe; color: #1a56c4; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #e3e6ea; padding: 8px 10px; text-align: left; font-size: 14px; }
+    th { background: #f2f2f2; }
+    form label { display: block; margin: 8px 0 4px; font-size: 14px; }
+    input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    button, .btn { display: inline-block; background: #2c5f8a; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 14px; }
+    .btn.secondary { background: #6b7280; }
+    .btn.danger { background: #c62828; }
+    .muted { color: #777; font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>校园闲置物品交易平台</strong>
+    <div>
+      {% if user.is_authenticated %}
+        <span>{{ user.nickname|default:user.username }}（{{ user.get_role_display }}）</span>
+        <a href="{% url 'accounts:profile' %}">个人信息</a>
+        <a href="{% url 'chat:notifications' %}">通知</a>
+        <form method="post" action="{% url 'accounts:logout' %}" style="display:inline">
+          {% csrf_token %}<button type="submit" class="btn secondary" style="padding:4px 10px">退出</button>
+        </form>
+      {% else %}
+        <a href="{% url 'accounts:login' %}">登录</a>
+        <a href="{% url 'accounts:register' %}">注册</a>
+      {% endif %}
+    </div>
+  </header>
+  <nav>
+    <a href="{% url 'items:home' %}">首页 / 浏览</a>
+    {% if user.is_authenticated and user.is_seller %}<a href="{% url 'items:create' %}">发布商品</a>{% endif %}
+    {% if user.is_authenticated and user.is_admin %}
+      <a href="{% url 'items:manage' %}">商品管理</a>
+      <a href="{% url 'accounts:audit_list' %}">用户审核</a>
+      <a href="{% url 'locations:master_data' %}">基础资料</a>
+    {% endif %}
+  </nav>
+  <main>
+    {% for message in messages %}
+      <div class="msg {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

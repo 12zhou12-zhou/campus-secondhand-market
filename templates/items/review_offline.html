@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}审核下架申请{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>审核下架申请</h2>
+  <p>商品：{{ req.item.item_no }} {{ req.item.title }}</p>
+  <p>申请人：{{ req.applicant }}｜原因：{{ req.reason }}</p>
+  <form method="post">
+    {% csrf_token %}
+    <label>审核说明（拒绝时必填）</label>
+    <textarea name="review_note"></textarea>
+    <button type="submit" name="action" value="approve">批准下架</button>
+    <button type="submit" name="action" value="reject" class="btn danger">拒绝</button>
+  </form>
+</div>
+{% endblock %}

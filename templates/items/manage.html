@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}商品管理{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>待审核下架申请</h2>
+  <table>
+    <tr><th>商品</th><th>申请人</th><th>原因</th><th>操作</th></tr>
+    {% for r in pending %}
+    <tr>
+      <td>{{ r.item.item_no }} {{ r.item.title }}</td>
+      <td>{{ r.applicant }}</td>
+      <td>{{ r.reason }}</td>
+      <td><a class="btn" href="{% url 'items:review_offline' r.pk %}">审核</a></td>
+    </tr>
+    {% empty %}<tr><td colspan="4">暂无待审核申请。</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>全部商品</h2>
+  <table>
+    <tr><th>编号</th><th>标题</th><th>卖家</th><th>状态</th><th>操作</th></tr>
+    {% for item in items %}
+    <tr>
+      <td>{{ item.item_no }}</td>
+      <td>{{ item.title }}</td>
+      <td>{{ item.seller }}</td>
+      <td>{{ item.get_status_display }}</td>
+      <td>
+        <a class="btn secondary" href="{% url 'items:detail' item.pk %}">详情</a>
+        {% if not item.is_terminal %}
+        <form method="post" action="{% url 'items:violation' item.pk %}" style="display:inline">
+          {% csrf_token %}<input name="reason" placeholder="违规原因" required>
+          <button type="submit" class="btn danger">违规下架</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}用户审核{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>用户审核</h2>
+  <table>
+    <tr><th>账号</th><th>昵称</th><th>角色</th><th>手机号</th><th>状态</th><th>操作</th></tr>
+    {% for u in users %}
+    <tr>
+      <td>{{ u.username }}</td>
+      <td>{{ u.nickname }}</td>
+      <td>{{ u.get_role_display }}</td>
+      <td>{{ u.phone }}</td>
+      <td>{{ u.get_audit_status_display }}</td>
+      <td><a class="btn" href="{% url 'accounts:audit_detail' u.pk %}">审核</a></td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">暂无待审核用户。</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

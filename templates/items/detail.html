@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>{{ item.title }} <span class="muted">{{ item.item_no }}</span></h2>
+  <p class="muted">状态：{{ item.get_status_display }}｜分类：{{ item.category }}｜成色：{{ item.condition|default:"-" }}｜交易方式：{{ item.trade_method|default:"-" }}</p>
+  <p>价格：￥{{ item.price }}</p>
+  <p>{{ item.description|linebreaks }}</p>
+  <p class="muted">卖家：{{ item.seller.nickname|default:item.seller.username }}｜提交时间：{{ item.created_at|date:"Y-m-d H:i" }}</p>
+
+  {% if item.offline_pending %}<p class="msg info">下架申请待审核。</p>{% endif %}
+
+  {% if user.is_authenticated and user.is_seller and item.seller_id == user.id %}
+    {% if item.status == "on_sale" %}
+      <form method="post" action="{% url 'items:add_note' item.pk %}" style="margin-top:12px">
+        {% csrf_token %}
+        {{ note_form.content }}
+        <button type="submit">追加补充说明</button>
+      </form>
+    {% endif %}
+    {% if item.status == "consulting" %}
+      <form method="post" action="{% url 'items:mark_deal' item.pk %}">
+        {% csrf_token %}<button type="submit">标记成交</button>
+      </form>
+    {% endif %}
+  {% endif %}
+
+  {% if user.is_authenticated and item.status == "pending_confirm" %}
+    <form method="post" action="{% url 'items:confirm_deal' item.pk %}">
+      {% csrf_token %}<button type="submit" class="btn">确认已成交</button>
+    </form>
+    <form method="post" action="{% url 'items:reject_deal' item.pk %}">
+      {% csrf_token %}<label>未成交原因</label><input name="reason" required>
+      <button type="submit" class="btn danger">反馈未成交</button>
+    </form>
+  {% endif %}
+
+  {% if not item.is_terminal and user.is_authenticated %}
+    <form method="post" action="{% url 'items:offline' item.pk %}">
+      {% csrf_token %}<label>下架原因</label><input name="reason" required>
+      <button type="submit" class="btn secondary">下架 / 申请下架</button>
+    </form>
+  {% endif %}
+
+  {% if user.is_authenticated and not item.is_terminal %}
+    <p><a class="btn secondary" href="{% url 'chat:conversation' item.pk %}">进入沟通</a></p>
+  {% endif %}
+</div>
+
+<div class="card">
+  <h3>补充说明</h3>
+  {% for n in notes %}
+    <p class="muted">{{ n.created_at|date:"Y-m-d H:i" }} {{ n.author }}：{{ n.content }}</p>
+  {% empty %}<p class="muted">暂无补充说明。</p>{% endfor %}
+</div>
+
+<div class="card">
+  <h3>评价</h3>
+  {% for r in ratings %}
+    <p>{{ r.rater.nickname|default:r.rater.username }}：{{ r.score }} 星｜{{ r.comment }}</p>
+  {% empty %}<p class="muted">暂无评价。</p>{% endfor %}
+  {% if user.is_authenticated and item.status == "sold" %}
+    <form method="post" action="{% url 'items:add_rating' item.pk %}">
+      {% csrf_token %}
+      <label>星级（1-5）</label>{{ rating_form.score }}
+      <label>评语</label>{{ rating_form.comment }}
+      <button type="submit" class="btn secondary">提交评价</button>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

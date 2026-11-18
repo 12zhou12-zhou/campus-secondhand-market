@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}登录 - 校园闲置物品交易平台{% endblock %}
+{% block content %}
+<div class="card" style="max-width:420px;margin:0 auto">
+  <h2>登录</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <label>{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="msg error">{{ field.errors|join:"；" }}</div>{% endif %}
+    {% endfor %}
+    <button type="submit">登录</button>
+    <p class="muted">忘记密码可联系管理员重置；登录角色由系统按账号读取。</p>
+  </form>
+</div>
+{% endblock %}

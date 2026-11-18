@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}审核详情{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>审核：{{ target.username }}</h2>
+  <p>昵称：{{ target.nickname }}｜角色：{{ target.get_role_display }}｜手机号：{{ target.phone }}｜邮箱：{{ target.email }}</p>
+  <p>学院/年级：{{ target.college }}｜联系方式：{{ target.contact }}</p>
+  <form method="post">
+    {% csrf_token %}
+    <label>{{ form.result.label }}</label>
+    {{ form.result }}
+    <label>{{ form.note.label }}</label>
+    {{ form.note }}
+    {% if form.note.errors %}<div class="msg error">{{ form.note.errors|join:"；" }}</div>{% endif %}
+    <button type="submit">提交审核结果</button>
+  </form>
+</div>
+<div class="card">
+  <h3>历史审核记录</h3>
+  <table>
+    <tr><th>时间</th><th>审核人</th><th>结果</th><th>说明</th></tr>
+    {% for r in records %}
+    <tr><td>{{ r.created_at|date:"Y-m-d H:i" }}</td><td>{{ r.auditor }}</td><td>{{ r.get_result_display }}</td><td>{{ r.note }}</td></tr>
+    {% empty %}
+    <tr><td colspan="4">暂无记录。</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}首页{% endblock %}
+{% block content %}
+<div class="card">
+  <form method="get" style="display:flex;gap:10px;flex-wrap:wrap">
+    <input type="text" name="q" value="{{ keyword }}" placeholder="搜索标题或描述" style="flex:2">
+    <select name="status">
+      <option value="">全部状态</option>
+      {% for value, label in status_choices %}<option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select>
+    <button type="submit">筛选</button>
+  </form>
+</div>
+<div class="grid">
+  {% for item in items %}
+  <div class="card">
+    <h3><a href="{% url 'items:detail' item.pk %}" style="color:#2c5f8a">{{ item.title }}</a></h3>
+    <p class="muted">{{ item.item_no }}｜{{ item.get_status_display }}｜{{ item.category }}</p>
+    <p>价格：￥{{ item.price }}</p>
+    <p class="muted">卖家：{{ item.seller.nickname|default:item.seller.username }}</p>
+  </div>
+  {% empty %}
+  <div class="card">暂无符合条件的商品。</div>
+  {% endfor %}
+</div>
+{% endblock %}

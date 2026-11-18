@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}基础资料{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>商品分类</h2>
+  <table><tr><th>分类</th><th>启用</th></tr>
+    {% for c in categories %}<tr><td>{{ c.name }}</td><td>{{ c.is_active|yesno:"是,否" }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>成色标准</h2>
+  <table><tr><th>成色</th><th>启用</th></tr>
+    {% for c in conditions %}<tr><td>{{ c.name }}</td><td>{{ c.is_active|yesno:"是,否" }}</td></tr>{% endfor %}
+  </table>
+</div>
+<div class="card">
+  <h2>交易方式</h2>
+  <table><tr><th>方式</th><th>启用</th></tr>
+    {% for m in methods %}<tr><td>{{ m.name }}</td><td>{{ m.is_active|yesno:"是,否" }}</td></tr>{% endfor %}
+  </table>
+  <p class="muted">新增 / 编辑分类、成色与交易方式可在 Django 后台 /admin/ 中维护。</p>
+</div>
+{% endblock %}

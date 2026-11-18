@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}个人信息{% endblock %}
+{% block content %}
+<div class="card" style="max-width:520px">
+  <h2>个人信息</h2>
+  <p class="muted">当前状态：{{ user.get_audit_status_display }}</p>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <label>{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="msg error">{{ field.errors|join:"；" }}</div>{% endif %}
+    {% endfor %}
+    <button type="submit">保存</button>
+  </form>
+</div>
+{% endblock %}

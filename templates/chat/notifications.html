@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}站内通知{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>站内通知</h2>
+  {% for n in notifications %}
+  <p>
+    <span class="muted">{{ n.created_at|date:"Y-m-d H:i" }}</span>
+    {{ n.content }}
+    {% if not n.is_read %}<span class="msg info">未读</span>{% endif %}
+    {% if n.item %}<a href="{% url 'items:detail' n.item.pk %}">查看商品</a>{% endif %}
+    {% if not n.is_read %}
+    <form method="post" action="{% url 'chat:mark_read' n.pk %}" style="display:inline">
+      {% csrf_token %}<button type="submit" class="btn secondary" style="padding:2px 8px">标为已读</button>
+    </form>
+    {% endif %}
+  </p>
+  {% empty %}<p class="muted">暂无通知。</p>{% endfor %}
+</div>
+{% endblock %}

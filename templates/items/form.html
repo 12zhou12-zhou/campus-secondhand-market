@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:560px">
+  <h2>{{ title }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <label>{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<div class="msg error">{{ field.errors|join:"；" }}</div>{% endif %}
+    {% endfor %}
+    <button type="submit">保存</button>
+  </form>
+</div>
+{% endblock %}
