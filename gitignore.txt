@@ -1,0 +1,47 @@
+# Python 虚拟环境
+venv/
+.venv/
+env/
+ENV/
+
+# Python 缓存与编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# 运行数据库（不提交真实数据）
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+
+# 环境变量与密钥（只保留 .env.example）
+.env
+.env.local
+.env.production
+*.key
+*.pem
+
+# 上传材料与静态收集结果
+media/
+uploads/
+staticfiles/
+
+# 测试与覆盖率缓存
+.pytest_cache/
+.coverage
+htmlcov/
+node_modules/
+
+# IDE 与系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/
