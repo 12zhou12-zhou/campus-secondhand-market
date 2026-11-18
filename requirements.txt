@@ -1,0 +1,9 @@
+# 固定版本依赖清单
+# 部署时在虚拟环境中执行：pip install -r requirements.txt
+# 实际版本号以开发环境锁定结果为准（pip freeze > requirements.txt）
+
+Django==5.2.*
+# 其余依赖按项目实际使用情况补充，例如：
+# django-cors-headers==
+# Pillow==
+# 测试与开发工具按需补充
